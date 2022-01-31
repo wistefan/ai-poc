@@ -1,0 +1,47 @@
+version: "3.7"
+
+# FastAPI app
+services:
+  apis:
+    build: .
+    container_name: apis
+    ports:
+      - 5000:5000
+    networks: 
+      ai-poc-network: 
+        aliases: 
+          - apis.docker
+
+  orion-ld:
+    image: fiware/orion-ld
+    container_name: ai-orion-ld
+    networks: 
+      ai-poc-network: 
+        aliases: 
+          - ai.orion.docker
+    expose:
+      - "1028"
+    ports:
+      - "1028:1028"
+    depends_on:
+      - ai-mongo-db
+    command: -dbhost ai.mongo.docker -logLevel DEBUG -port 1028
+
+  mongo-db:
+    image: mongo:3.6
+    container_name: ai-mongo-db
+    ports:
+      - "27018:27018" 
+    networks: 
+      ai-poc-network: 
+        aliases: 
+          - ai.mongo.docker
+    command: --nojournal
+    volumes:
+      - ai-mongo-database:/ai-database#
+
+  networks:
+    ai-poc-network: external
+  
+  volumes:
+    ai-mongo-database: ~
