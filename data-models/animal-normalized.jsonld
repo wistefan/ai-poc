@@ -1,0 +1,29 @@
+
+{  
+	"id": "urn:ngsi-ld:Animal:ca3f1295-500c-4aa3-b745-d143097d5c01",  
+	"type": "Animal",  
+	"modifiedAt": "2021-05-04T12:30:00Z",  
+	"species": {  
+	  "type": "Property",  
+	  "value": "cow"  
+	},  
+	"location": {  
+	  "type": "GeoProperty",  
+	  "value": {  
+		"type": "Point",  
+		"coordinates": [  
+		  -4.754444444,  
+		  41.640833333,
+		  12,567892900  
+		]  
+	  }  
+	}, 
+	"animalActivity":{
+		"type": "Property",
+		"value":"walking"
+	}, 
+	"@context": [  
+	  "https://smartdatamodels.org/context.jsonld",  
+	  "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"  
+	]  
+  }  

@@ -1,0 +1,14 @@
+{
+    "@context": {
+        "type": "@type",
+        "id": "@id",
+        "ngsi-ld": "https://uri.etsi.org/ngsi-ld/",
+        "fiware": "https://uri.fiware.org/ns/data-models#",
+        "schema": "https://schema.org/",
+        "Animal": "https://w3id.org/def/saref4agri#Animal",
+        "species": "fiware:species",
+        "location": "https://w3id.org/saref#location",
+        "temperature": "https://w3id.org/saref#temperature",
+        "animalActivity": "fiware:animalActivity"
+    }
+}

@@ -1,0 +1,71 @@
+Animal:
+  description: 'An observation of animal conditions at a certain place and time. This data model has been developed for the IoF2020 UC ShareBeef by UCO and SensoWave.'
+  properties:
+    id:
+      anyOf: &animal_-_properties_-_owner_-_items_-_anyof
+        - description: 'Property. Identifier format of any NGSI entity'
+          maxLength: 256
+          minLength: 1
+          pattern: ^[\w\-\.\{\}\$\+\*\[\]`|~^@!,:\\]+$
+          type: string
+        - description: 'Property. Identifier format of any NGSI entity'
+          format: uri
+          type: string
+      description: 'Unique identifier of the entity'
+      x-ngsi:
+        type: Property
+    dateModified:
+      description: 'Timestamp of the last modification of the entity. This will usually be allocated by the storage platform.'
+      format: date-time
+      type: string
+      x-ngsi:
+        type: Property
+    species:
+      description: 'Species to which the animal belongs. This enum can be increased'
+      enum:
+        - cow
+        - goat
+        - horse
+        - pig
+        - sheep
+        - 'dairy cattle'
+        - 'beef cattle'
+      type: string
+      x-ngsi:
+        model: 'Enum:cow, goat, horse, pig, sheep, dairy cattle, beef cattle· https://schema.org/Text'
+        type: Property
+    location:
+      description: 'Geojson reference to the item. It can be Point, LineString, Polygon, MultiPoint, MultiLineString or MultiPolygon'
+      oneOf:
+        - description: 'Geoproperty. Geojson reference to the item. Point'
+          properties:
+            bbox:
+              items:
+                type: number
+              minItems: 4
+              type: array
+            coordinates:
+              items:
+                type: number
+              minItems: 2
+              type: array
+            type:
+              enum:
+                - Point
+              type: string
+          required:
+            - type
+            - coordinates
+          title: 'GeoJSON Point'
+          type: object
+     animalActivity:
+      description: 'The activity of the animal. This enum can be increased'
+      enum:
+        - walking
+        - grazing
+        - stand up
+        - sternal lying
+        - licking calf
+      type: string
+      x-ngsi:
+        type: Property
