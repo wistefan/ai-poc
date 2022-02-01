@@ -18,7 +18,7 @@ payload= json.dumps({
 	"notification": {
 		"format": "keyValues",
 		"endpoint": {
-		"uri": "http://apis.docker:5000/subscription",
+		"uri": "http://apis.docker:5000/notification",
 		"accept": "application/json"
 		}
 	},
