@@ -19,13 +19,10 @@ services:
       ai-poc-network: 
         aliases: 
           - ai.orion.docker
-    expose:
-      - "1028"
     ports:
-      - "1028:1028"
+      - "1028:1026"
     depends_on:
       - mongo-db
-    command: -dbhost ai.mongo.docker -logLevel DEBUG -port 1028
 
   mongo-db:
     image: mongo:3.6
