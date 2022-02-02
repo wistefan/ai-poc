@@ -35,8 +35,6 @@ def get_coordinates(data :dict = Body(...)):
 
 @app.post('/prediction')
 def get_prediction(data:Animal):
-    data = get_coordinates()
-    print(data)
     input = data.dict()
     posx = input['pos_x']
     posy = input['pos_y']
@@ -45,12 +43,6 @@ def get_prediction(data:Animal):
     prediction = loaded_model.predict([[posx, posy, posz, temp]]).tolist()[0]
     return  prediction
 
-
-""" @app.get('/temperature')
-async def get_temperature():
-	response = actual_temperature
-	print(response)
-	return response """
 
 
 @app.post("/animal")
