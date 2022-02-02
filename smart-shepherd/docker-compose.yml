@@ -13,44 +13,61 @@ services:
           - apis.docker
 
   orion-ld:
-    image: fiware/orion-ld
+    # avoid using latest without beeing aware of the consequences;)
+    # this image definition uses the latest-stable release as default and allows to overwrite it via the env-var ORION_IMAGE
+    image: ${ORION_IMAGE:-quay.io/fiware/orion-ld:1.0.1}
     container_name: ai-orion-ld
     networks: 
       ai-poc-network: 
         aliases: 
           - ai.orion.docker
+    # only informational
     expose:
-      - "1028"
+      - "1026"
+    # allow to access orion via 'localhost:1028', wich is fowarded to port 1026 on the container
     ports:
-      - "1028:1028"
+      - "1028:1026"
+    # configuration via env var is less invasive and does not require knowledge about the entrypoint, thus is recommended 
+    environment:
+      - ORIONLD_MONGO_HOST=ai.mongo.docker
     depends_on:
       - mongo-db
-    command: -dbhost ai.mongo.docker -logLevel DEBUG -port 1028
 
   mongo-db:
-    image: mongo:3.6
+    # current default for orion is mongo >= 4
+    image: mongo:4.0
     container_name: ai-mongo-db
-    ports:
-      - "27018:27018" 
+    # no need for mongo to be available on localhost, since orion connects through the network -> ports section removed.
     networks: 
       ai-poc-network: 
         aliases: 
           - ai.mongo.docker
     command: --nojournal
+    # do you need the mongo-db to be persistent? Then the volume-mount needs to be ai-mongo-database:/data/db (the folder used by mongo)
+    # the current mount has no practical benefits, it will mount an empty volume to an unused folder inside mongo
     volumes:
-      - ai-mongo-database:/ai-database#
+      - ai-mongo-database:/ai-database
+
 
   notification-proxy:
-    image: quay.io/wi_stefan/notification-proxy
+    # avoid using latest without beeing aware of the consequences;)
+    # this image definition uses the latest-stable release as default and allows to overwrite it via the env-var NOTIFICATION_PROXY_IMAGE
+    image: ${NOTIFICATION_PROXY_IMAGE:quay.io/wi_stefan/notification-proxy:0.0.4}
     container_name: notif-proxy
     ports:
       - 8080:8080
+    networks: 
+    # needs to be in the same network to be able to reach orion by hostname
+      ai-poc-network: 
+        aliases: 
+          - ai.notification-proxy.docker
     environment:
       - MICRONAUT_SERVER_PORT=8080
-      - GENERAL_TENANT=null
-      - HTTP_SERVICES_BROKER_URL=http://localhost:1028
+    # tenant=null is the default and not required here.
+      - MICRONAUT_HTTP_SERVICES_BROKER_URL=http://ai.orion.docker:1026
 
-  # @context file is served from here
+
+  # do you have specific needs for a dedicated context-serving mechanism?
   ngsi-ld-context:
     image: httpd:alpine
     container_name: ld-context
