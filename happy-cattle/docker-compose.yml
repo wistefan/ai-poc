@@ -1,0 +1,48 @@
+version: "3.7"
+
+# FastAPI app
+services:
+  orion-ld:
+    image: fiware/orion-ld
+    container_name: farm-orion-ld
+    networks: 
+      ai-poc-network: 
+        aliases: 
+          - farm.orion.docker
+    expose:
+      - "1029"
+    ports:
+      - "1029:1029"
+    depends_on:
+      - mongo-db
+    command: -dbhost farm.mongo.docker -logLevel DEBUG -port 1029
+
+  mongo-db:
+    image: mongo:3.6
+    container_name: farm-mongo-db
+    ports:
+      - "27019:27019" 
+    networks: 
+      ai-poc-network: 
+        aliases: 
+          - farm.mongo.docker
+    command: --nojournal
+    volumes:
+      - farm-mongo-database:/farm-database#
+
+  farm-notification-proxy:
+    image: quay.io/wi_stefan/notification-proxy
+    container_name: farm-notif-proxy
+    ports:
+      - 8081:8081
+    environment:
+      - MICRONAUT_SERVER_PORT=8081
+      - GENERAL_TENANT=null
+      - HTTP_SERVICES_BROKER_URL=http://localhost:1029
+
+networks:
+  ai-poc-network:
+    external: true
+  
+volumes:
+  farm-mongo-database: ~
